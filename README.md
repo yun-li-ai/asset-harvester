@@ -1,4 +1,4 @@
-# Asset Harvester: Turning In-the-Wild Driving Logs into 3D Assets for Simulation
+# Asset Harvester: Extracting 3D Assets from Autonomous Driving Logs for Simulation
 
 
 
@@ -12,10 +12,10 @@
 
 ### Abstract
 
-Neural scene reconstruction converts driving logs into interactive environments for closed-loop simulation, but it does not produce complete 3D object assets needed for multi-agent manipulation and dramatic novel-view synthesis.
-To address this challenge, we present Asset Harvester, an image-to-3D model and end-to-end pipeline that converts sparse, in-the-wild observations of AV objects from real driving logs into complete, simulation-ready assets. 
-At the core of our method is SparseViewDiT, a sparse-view-to-multiview generation model developed in this work. We couple SparseViewDiT with 3D Gaussian lifting and train the model for sparse conditions via hybrid data curation, camera and occlusion augmentation, and self-distillation.
-We integrate the pipeline with NVIDIA NCore for data ingestion and with NVIDIA NuRec for asset insertion, replacement, and closed-loop simulation, enabling scalable conversion of driving logs into reusable 3D assets. We also introduce the NuRec AV Object Benchmark and perception-based metrics that are robust to small spatial misalignment for evaluating in-the-wild AV object reconstruction.
+Closed-loop simulation is a core component of autonomous vehicle (AV) development, enabling scalable testing, training, and safety validation before real-world deployment. Neural scene reconstruction converts driving logs into interactive 3D environments for simulation, but it does not produce complete 3D object assets required for agent manipulation and large-viewpoint novel-view synthesis.
+To address this challenge, we present Asset Harvester, an image-to-3D model and end-to-end pipeline that converts sparse, in-the-wild object observations from real driving logs into complete, simulation-ready assets.
+Rather than relying on a single model component, we developed a system-level design for real-world AV data that combines large-scale curation of object-centric training tuples, geometry-aware preprocessing across heterogeneous sensors, and a robust training recipe that couples sparse-view-conditioned multiview generation with 3D Gaussian lifting. Within this system, SparseViewDiT is explicitly designed to address limited-angle views and other real-world data challenges.
+Together with hybrid data curation, augmentation, and self-distillation, this system enables scalable conversion of sparse AV object observations into reusable 3D assets.
 
 
 <p align="center">
@@ -206,10 +206,12 @@ If you find this work useful in your research, please consider citing:
 
 ```bibtex
 @article{cao2026assetharvester,
-  title   = {Asset Harvester: Turning In-the-Wild Driving Logs into 3D Assets for Simulation},
-  author  = {Cao, Tianshi and Ren, Jiawei and Zhang, Yuxuan and Seo, Jaewoo and Huang, Jiahui and 
-             Solanki, Shikhar and Zhang, Haotian and Guo, Mingfei and Turki, Haithem and Li, Mu and 
-             Zhu, Yue and Zhang, Sipeng and Gojcic, Zan and Fidler, Sanja and Yin, Kangxue},
+  title   = {Asset Harvester: Extracting 3D Assets from Autonomous Driving Logs for Simulation},
+  author  = {Cao, Tianshi and Ren, Jiawei and Zhang, Yuxuan and 
+             Seo, Jaewoo and Huang, Jiahui and Solanki, Shikhar and 
+             Zhang, Haotian and Guo, Mingfei and Turki, Haithem and 
+             Li, Mu and Zhu, Yue and Zhang, Sipeng and Gojcic, Zan and 
+             Fidler, Sanja and Yin, Kangxue},
   year    = {2026},
 }
 ```
