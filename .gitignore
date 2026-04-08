@@ -96,6 +96,6 @@ Thumbs.db
 *.bak
 *.tmp
 
-./asset_harvester_v26.02
-./output-tools
-./pandaset_ncore_logs
+asset_harvester_v26.02/
+output-tools/
+pandaset_ncore_logs/
