@@ -30,6 +30,8 @@ The cache directory must end up at **`./asset_harvester_v26.02`** next to the re
 
 ## 2. Dataset layout
 
+Downloade data from here https://drive.google.com/drive/folders/1wjecqxSw0uIDJFlBmzF-giI-7tv1t5iP?usp=sharing
+
 Place **pandaset_ncore_logs** (or your shard source tree) under:
 
 ```text
