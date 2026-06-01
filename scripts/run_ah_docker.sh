@@ -1,4 +1,14 @@
-DATASET_SEQUENCE="016"
+# Usage: scripts/run_ah_docker.sh <DATASET_SEQUENCE>
+# Example: scripts/run_ah_docker.sh 001
+
+if [ "$#" -lt 1 ]; then
+  echo "Usage: $0 <DATASET_SEQUENCE>"
+  echo "Example: $0 001"
+  exit 1
+fi
+
+DATASET_SEQUENCE="$1"
+
 # Asset-harvester repo root (this file lives in scripts/).
 ROOT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 

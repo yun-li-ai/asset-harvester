@@ -36,13 +36,19 @@ Place **pandaset_ncore_logs** (or your shard source tree) under:
 ./pandaset_ncore_logs/<SEQ>/<SEQ>.zarr.itar
 ```
 
-Default sequence in `run_ah_docker.sh` is **`016`**; change `DATASET_SEQUENCE` in that script if you use another shard.
+Default sequence in the examples below is **`001`**; pass any shard id as the first argument to both harvest and post-processing scripts.
 
 ## 3. Run Asset Harvester (Docker)
 
 ```bash
 export NGC_API_KEY=...   # if the image needs it
-sh scripts/run_ah_docker.sh
+sh scripts/run_ah_docker.sh <SEQ>
+```
+
+Example:
+
+```bash
+sh scripts/run_ah_docker.sh 001
 ```
 
 By default the container runs as **`--user $(id -u):$(id -g)`** so files under `output-tools/` are writable on the host without `sudo`. That avoids permission errors when you run Gaussian post-processing.
@@ -50,13 +56,13 @@ By default the container runs as **`--user $(id -u):$(id -g)`** so files under `
 If you need the container as root instead:
 
 ```bash
-AH_DOCKER_AS_ROOT=1 sh scripts/run_ah_docker.sh
+AH_DOCKER_AS_ROOT=1 sh scripts/run_ah_docker.sh <SEQ>
 ```
 
 Then fix ownership once before post-processing, for example:
 
 ```bash
-sudo chown -R "$USER:$USER" output-tools/harvested_016
+sudo chown -R "$USER:$USER" output-tools/harvested_<SEQ>
 ```
 
 Harvest output path (default): **`output-tools/harvested_<SEQ>/`**.
@@ -66,8 +72,16 @@ Harvest output path (default): **`output-tools/harvested_<SEQ>/`**.
 From the repo root:
 
 ```bash
-sh scripts/run_gaussian_post_processing.sh
+sh scripts/run_gaussian_post_processing.sh <SEQ>
 ```
+
+Example:
+
+```bash
+sh scripts/run_gaussian_post_processing.sh 001
+```
+
+Use the **same `<SEQ>`** as in step 3 so post-processing reads from `output-tools/harvested_<SEQ>/`.
 
 This writes **`gaussians.ply`** next to each source asset PLY under the harvest directory. It uses **`metadata.yaml`** in that directory for cuboid scaling when present; otherwise it skips scaling and prints a warning.
 
@@ -75,6 +89,5 @@ Useful overrides (see script comments):
 
 - **`HARVEST_IN`** — path to a harvest folder (default: `output-tools/harvested_<SEQ>`).
 - **`META_YAML`** — explicit metadata path.
-- Edit **`DATASET_SEQUENCE`** at the top of `run_gaussian_post_processing.sh` to match your harvest.
 
 Single-asset and extra CLI flags are documented in **`gaussian_post_processing.py`** and in comments at the bottom of `run_gaussian_post_processing.sh`.

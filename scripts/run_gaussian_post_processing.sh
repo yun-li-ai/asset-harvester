@@ -4,6 +4,9 @@
 # Other convention: add --invert-final-y-shift (dy = y_target - ymin).
 # Override: --pivot-y-lift 0  |  disable: --no-final-y-snap
 #
+# Usage: scripts/run_gaussian_post_processing.sh <DATASET_SEQUENCE>
+# Example: scripts/run_gaussian_post_processing.sh 001
+#
 # If harvest was created by Docker as root, fix ownership once on the host, then re-run this script:
 #   sudo chown -R "$USER:$USER" output-tools/harvested_<SEQ>
 # Or re-harvest with scripts/run_ah_docker.sh (uses --user uid:gid by default).
@@ -11,7 +14,13 @@ set -e
 REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$REPO_ROOT"
 
-DATASET_SEQUENCE="016"
+if [ "$#" -lt 1 ]; then
+  echo "Usage: $0 <DATASET_SEQUENCE>"
+  echo "Example: $0 001"
+  exit 1
+fi
+
+DATASET_SEQUENCE="$1"
 
 HARVEST_IN="${HARVEST_IN:-$REPO_ROOT/output-tools/harvested_${DATASET_SEQUENCE}}"
 META_YAML="${META_YAML:-$HARVEST_IN/metadata.yaml}"
