@@ -1,0 +1,10 @@
+__pycache__/
+.vscode/
+
+# Bazel-specific ignores
+/bazel-*
+.bazelrc.user
+
+.ci-keep/
+
+MODULE.bazel.lock
