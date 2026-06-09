@@ -633,9 +633,25 @@ def run_generation(
         imageio.v2.mimwrite(f"{output_dir}/3d_lifted.mp4", rendered_ims, fps=5, macro_block_size=1)
         print(f"   Saved TokenGS video to {output_dir}/3d_lifted.mp4")
 
-        # Save Gaussian PLY
+        # Save Gaussian PLY (metric scale + bottom-center pivot; see TokengsLiftingRunner.save_ply).
         ply_path = os.path.join(output_dir, "gaussians.ply")
-        lifting_runner.save_ply(gaussians, ply_path)
+        lifting_runner.save_ply(
+            gaussians,
+            ply_path,
+            lwh=lwh,
+            ply_metric_scale=args.ply_metric_scale_factor,
+            apply_ply_metric_scale=not args.ply_skip_metric_scale,
+            ply_bottom_center_pivot=not args.ply_skip_bottom_pivot,
+        )
+        if args.ply_skip_metric_scale:
+            print("   PLY export: metric scale off (canonical units).")
+        elif args.ply_metric_scale_factor is not None:
+            print(f"   PLY export: metric scale = {args.ply_metric_scale_factor} (override).")
+        else:
+            lwh_np = np.atleast_1d(np.asarray(lwh, dtype=np.float64))
+            sm = float(np.max(lwh_np)) if lwh_np.size else 1.0
+            print(f"   PLY export: metric scale = max(lwh) = {sm:.6g}.")
+        print(f"   PLY export: bottom-center pivot (+Y up) = {not args.ply_skip_bottom_pivot}.")
         print(f"   Saved Gaussian PLY to {ply_path}")
 
         if args.offload_model_to_cpu:
@@ -737,6 +753,22 @@ diffusers format at load time.
         default=None,
         help="Path to the TokenGS checkpoint (.safetensors). Lifting input resolution and "
         "num_gs_tokens are read from safetensors header metadata (input_res, num_gs_tokens or num_gs_token).",
+    )
+    parser.add_argument(
+        "--ply-skip-metric-scale",
+        action="store_true",
+        help="Do not scale PLY xyz/Gaussian sizes by max(lwh) meters (legacy TokenGS unit export).",
+    )
+    parser.add_argument(
+        "--ply-metric-scale-factor",
+        type=float,
+        default=None,
+        help="Override PLY uniform scale (meters per canonical unit). Default: max(lwh) when not skipped.",
+    )
+    parser.add_argument(
+        "--ply-skip-bottom-pivot",
+        action="store_true",
+        help="Keep PLY centered at the object centroid (default: pivot at bottom center, +Y up).",
     )
     parser.add_argument(
         "--offload_model_to_cpu",
